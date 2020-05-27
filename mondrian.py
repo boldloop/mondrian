@@ -57,7 +57,7 @@ def build_terminus(const, v, direction, opps, limit, opp_limit,
     else:
         if random() < (1 - 2*border_chance):
             # continuing the current line, maybe doing something else
-            step = random() * direction * 20
+            step = round(random() * direction * 20)
 
             # in this list comp, need to check both ways if step is negative
             opps_with_v = [opp for opp in opps if
