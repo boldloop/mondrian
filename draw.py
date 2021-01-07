@@ -9,7 +9,7 @@
 
 
 from mondrian import gen_lines
-from random import random, choice
+from random import random, choice, randint
 import drawBot
 
 
@@ -28,7 +28,7 @@ def draw_lines(x_lines, y_lines, mult):
 
 
 def draw_rect(x0, xf, y0, yf, mult):
-    white_chance = .65
+    white_chance = .4
     if random() < white_chance:
         drawBot.fill(1)
         color = 'white'
@@ -46,18 +46,22 @@ def draw_rect(x0, xf, y0, yf, mult):
 
 def extend(c, v, lines, limit):
     lines_with_v = [line for line in lines if line[1][0] <= v <= line[1][1]]
-    i = 0
-    while True:
-        if any([line[0] == c+i for line in lines_with_v]) or c+i == limit:
-            cf = c+i
-            break
-        i += 1
-    i = 0
-    while True:
-        if any([line[0] == c-i for line in lines_with_v]) or c-i == 0:
-            c0 = c-i
-            break
-        i += 1
+    try:
+        i = 0
+        while True:
+            if any([line[0] == c+i for line in lines_with_v]) or c+i == limit:
+                cf = c+i
+                break
+            i += 1
+        i = 0
+        while True:
+            if any([line[0] == c-i for line in lines_with_v]) or c-i == 0:
+                c0 = c-i
+                break
+            i += 1
+    except KeyboardInterrupt:
+        print(i)
+        raise(KeyboardInterrupt)
     return c0, cf
 
 
@@ -65,13 +69,13 @@ def draw_colors(x_lines, y_lines, width, height, mult):
     coord_pairs = [(x, y) for x in range(width) for y in range(height-1)]
     while len(coord_pairs) > 0:
         x, y = coord_pairs[0]
-        print(x, y)
+        # print(x, y)
         y0, yf = extend(y, x, x_lines, height)
-        x0, xf = extend(x, y, y_lines, height)
-        print(x0, xf)
-        print(y0, yf)
+        x0, xf = extend(x, y, y_lines, width)
+        # print(x0, xf)
+        # print(y0, yf)
         draw_rect(x0, xf, y0, yf, mult)
-        print()
+        # print()
         coord_pairs = [(x, y) for x, y in coord_pairs
                        if not (x0 <= x <= xf and y0 <= y <= yf)]
 
@@ -91,8 +95,18 @@ def draw(x_lines, y_lines, width, height, out_fn):
     drawBot.endDrawing()
 
 
+def img_from_dim(width, height, fn):
+    x, y = randint(1, height-1), randint(3, width-3)
+    lines = gen_lines(width, height, [(x, (y, y+2))], [])
+    draw(*lines, width, height, fn)
+
+
 if __name__ == '__main__':
-    w, h = 50, 60
-    lines = gen_lines(w, h, [(40, (20, 30))], [])
-    print(lines)
-    draw(*lines, w, h, 'test.png')
+    dims = [(randint(40, 100), randint(10, 100), f'gallery/{i:02}.png')
+            for i in range(100)]
+    for dim in dims:
+        print(dim)
+        img_from_dim(*dim)
+
+
+# done.
