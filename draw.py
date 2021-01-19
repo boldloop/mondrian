@@ -97,7 +97,7 @@ def draw(x_lines, y_lines, width, height, out_fn):
 
 def img_from_dim(width, height, fn):
     x, y = randint(1, height-1), randint(3, width-3)
-    lines = gen_lines(width, height, [(x, (y, randint(y, width)))], [])
+    lines = gen_lines(width, height, [(x, (y, y+2))], [])
     draw(*lines, width, height, fn)
 
 
