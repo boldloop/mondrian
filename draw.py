@@ -97,13 +97,12 @@ def draw(x_lines, y_lines, width, height, out_fn):
 
 def img_from_dim(width, height, fn):
     x, y = randint(1, height-1), randint(3, width-3)
-    lines = gen_lines(width, height, [(x, (y, y+2))], [])
+    lines = gen_lines(width, height, [(x, (y, randint(y, width)))], [])
     draw(*lines, width, height, fn)
 
 
 if __name__ == '__main__':
-    dims = [(randint(40, 100), randint(10, 100), f'gallery/{i:02}.png')
-            for i in range(100)]
+    dims = [(50, 60, f'gallery/{i:02}.png') for i in range(100)]
     for dim in dims:
         print(dim)
         img_from_dim(*dim)
